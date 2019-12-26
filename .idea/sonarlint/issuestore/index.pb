@@ -82,3 +82,13 @@ f
 6app/src/main/java/com/gmail/movie_grid/model/Result.kt,6\a\6af6558be938f99ba665ce623d54d741ebdd9d6c
 o
 ?app/src/main/java/com/gmail/movie_grid/ui/DentalFilmActivity.kt,4\1\418e029b5a5356a580386402a5d13214d6b821bd
+o
+?app/src/main/res/drawable/ic_keyboard_arrow_left_black_24dp.xml,8\5\8570ff3ee3ab9126d351cb75715df198602a2fb3
+`
+0app/src/main/res/drawable/progress_animation.xml,2\2\228675d7812094e549cd43d55c8eca2f87c36577
+`
+0app/src/main/res/layout/activity_dental_film.xml,f\e\fee71ba141e9c20cd5ec3e70eeb76b260d37cd10
+V
+&app/src/main/res/layout/movie_item.xml,a\1\a1ceff8a3b67a540e62ce938c3549c4a5d93ae83
+`
+0app/src/main/res/xml/network_security_config.xml,9\d\9d239a9c6e0f3ce6bc750ee58e30863a8efd3403
