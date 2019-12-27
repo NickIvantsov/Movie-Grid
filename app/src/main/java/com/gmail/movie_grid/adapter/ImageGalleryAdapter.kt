@@ -48,6 +48,7 @@ class ImageGalleryAdapter(
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .priority(Priority.HIGH)
             .dontAnimate()
+            .error(R.drawable.ic_error_outline_black_24dp)
             .dontTransform()
 
         Glide.with(mContext)
