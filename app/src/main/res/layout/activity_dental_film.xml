@@ -6,7 +6,6 @@
     android:id="@+id/main_cont"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#B8DAEE"
     tools:context=".ui.DentalFilmActivity">
 
     <ImageView
@@ -18,46 +17,41 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintTop_toBottomOf="@+id/name_film"
         tools:srcCompat="@tools:sample/avatars" />
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:backgroundTint="@android:color/white"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
+    <TextView
+        android:id="@+id/back_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@android:color/white"
+        android:drawableLeft="@drawable/ic_keyboard_arrow_left_black_24dp"
+        android:gravity="center|left"
+        android:minWidth="75dp"
+        android:minHeight="50dp"
+        android:text="back"
+        android:textColor="#C2C2C2"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/back_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@android:color/white"
-            android:drawableLeft="@drawable/ic_keyboard_arrow_left_black_24dp"
-            android:gravity="center|left"
-            android:minWidth="75dp"
-            android:text="back"
-            android:textColor="#C2C2C2"
-            android:textSize="18sp" />
-
-        <TextView
-            android:id="@+id/name_film"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="7"
-            android:background="@android:color/white"
-            android:gravity="center"
-            android:paddingStart="10dp"
-            android:paddingEnd="20dp"
-            android:textAlignment="gravity"
-            android:textColor="@android:color/darker_gray"
-            android:textSize="18sp" />
-    </LinearLayout>
+    <TextView
+        android:id="@+id/name_film"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="7"
+        android:background="@android:color/white"
+        android:gravity="center"
+        android:minHeight="50dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="20dp"
+        android:textAlignment="gravity"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/back_tv"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
