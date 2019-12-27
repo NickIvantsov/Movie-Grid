@@ -21,11 +21,9 @@ import com.gmail.movie_grid.ui.DentalFilmActivity
 
 class ImageGalleryAdapter(
     private val mContext: Context,
-    private val films: MutableList<Result>
+    val films: MutableList<Result>
 ) :
     RecyclerView.Adapter<ImageGalleryAdapter.MyViewHolder>() {
-    private val VIEW_TYPE_LOADING = 0
-    private val VIEW_TYPE_NORMAL = 1
     private var isLoaderVisible = false
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -39,10 +37,10 @@ class ImageGalleryAdapter(
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
 
-        val spacePhoto = "${NetworkService.POSTER_URL}${mFilms[position]?.posterPath}"
+        val spacePhoto = "${NetworkService.POSTER_URL}${mFilms[position].posterPath}"
         val imageView = holder.mPhotoImageView
 
-        System.out.println(spacePhoto)
+        println(spacePhoto)
         val options: RequestOptions = RequestOptions()
             .placeholder(R.drawable.progress_animation)
             .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -132,5 +130,7 @@ class ImageGalleryAdapter(
 
     companion object {
         const val ID = "ID"
+        const val VIEW_TYPE_LOADING = 0
+        const val VIEW_TYPE_NORMAL = 1
     }
 }
