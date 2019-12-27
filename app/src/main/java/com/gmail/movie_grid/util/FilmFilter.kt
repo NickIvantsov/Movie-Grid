@@ -8,7 +8,7 @@ class FilmFilter(private val id: Int) {
     fun filter(list: List<Result>): List<Result> {
         val tmp = ArrayList<Result>()
         list.forEach(action = {
-            if (id == it.id) {
+            if (id == it?.id) {
                 tmp.add(it)
                 Log.d(TAG,"add new element")
             }
