@@ -1,6 +1,7 @@
 package com.gmail.movie_grid.ui
 
 import android.content.Context
+import android.content.res.Configuration
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.util.Log
@@ -30,6 +31,7 @@ class MainActivity : AppCompatActivity(),
     SwipeRefreshLayout.OnRefreshListener {
     private val disposable = CompositeDisposable()
     private lateinit var filmViewModel: FilmsViewModel
+    private lateinit var layoutManager: RecyclerView.LayoutManager
     @BindView(R.id.swipeRefresh)
     lateinit var swipeRefresh: SwipeRefreshLayout
     @BindView(R.id.rv_images)
@@ -54,7 +56,7 @@ class MainActivity : AppCompatActivity(),
         })
         swipeRefresh.setOnRefreshListener(this)
 
-        val layoutManager: RecyclerView.LayoutManager = GridLayoutManager(this, 2)
+        layoutManager = GridLayoutManager(this, 2)
 
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = layoutManager
@@ -64,19 +66,6 @@ class MainActivity : AppCompatActivity(),
         recyclerView.adapter = adapter
 
         doApiCall()
-
-        recyclerView.addOnScrollListener(object :
-            PaginationListener(layoutManager = layoutManager as LinearLayoutManager) {
-            override fun loadMoreItems() {
-                isLoading = true
-                currentPage++
-                doApiCall()
-            }
-
-            override fun isLastPage(): Boolean = isLastPage
-
-            override fun isLoading(): Boolean = isLoading
-        })
     }
 
     fun doApiCall() {
@@ -143,9 +132,41 @@ class MainActivity : AppCompatActivity(),
         disposable.clear()
     }
 
+    override fun onResume() {
+        super.onResume()
+        when (getScreenOrientation()) {
+            PORTRAIT_ORIENTATION -> {
+                layoutManager = GridLayoutManager(this, 2)
+                setOnScrollListener(layoutManager)
+            }
+            LANDSCAPE_ORIENTATION -> {
+                layoutManager = GridLayoutManager(this, 4)
+                setOnScrollListener(layoutManager)
+            }
+        }
+    }
+
+    private fun setOnScrollListener(layoutManager: RecyclerView.LayoutManager) {
+        recyclerView.layoutManager = layoutManager
+        recyclerView.addOnScrollListener(object :
+            PaginationListener(layoutManager = layoutManager as LinearLayoutManager) {
+            override fun loadMoreItems() {
+                isLoading = true
+                currentPage++
+                doApiCall()
+            }
+
+            override fun isLastPage(): Boolean = isLastPage
+
+            override fun isLoading(): Boolean = isLoading
+        })
+    }
 
     companion object {
         private val TAG = MainActivity::class.java.simpleName
+        private const val PORTRAIT_ORIENTATION = 1
+        private const val LANDSCAPE_ORIENTATION = 2
+        private const val UNKNOWN = -1
     }
 
     fun hasConnection(context: Context): Boolean {
@@ -160,9 +181,11 @@ class MainActivity : AppCompatActivity(),
             return true
         }
         wifiInfo = cm.activeNetworkInfo
-        return if (wifiInfo != null && wifiInfo.isConnected) {
-            true
-        } else false
+        return wifiInfo != null && wifiInfo.isConnected
+    }
+
+    private fun getScreenOrientation(): Int? {
+        return if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) PORTRAIT_ORIENTATION else if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) LANDSCAPE_ORIENTATION else UNKNOWN
     }
 
 }
