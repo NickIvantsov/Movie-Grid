@@ -1,8 +1,9 @@
 package com.gmail.movie_grid.ui
 
+import android.content.Context
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -13,9 +14,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import butterknife.BindView
 import butterknife.ButterKnife
-import com.bumptech.glide.Priority
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.request.RequestOptions
 import com.gmail.movie_grid.R
 import com.gmail.movie_grid.adapter.ImageGalleryAdapter
 import com.gmail.movie_grid.adapter.PaginationListener
@@ -107,7 +105,7 @@ class MainActivity : AppCompatActivity(),
                     }
                     isLoading = false
                 }, { error ->
-                    Toast.makeText(this, "Error internet", Toast.LENGTH_SHORT).show()
+                    makeErrorToast()
                     isLoading = false
                     swipeRefresh.isRefreshing = false
                     error.printStackTrace()
@@ -117,12 +115,26 @@ class MainActivity : AppCompatActivity(),
 
     }
 
+    private fun makeErrorToast() {
+        Toast.makeText(this, "Error internet", Toast.LENGTH_SHORT).show()
+    }
+
     override fun onRefresh() {
-        itemCount = 0
-        currentPage = PAGE_START
-        isLastPage = false
-        adapter.clear()
-        doApiCall()
+        when (hasConnection(this)) {
+            true -> {
+                itemCount = 0
+                currentPage = PAGE_START
+                isLastPage = false
+                adapter.clear()
+                doApiCall()
+            }
+            else -> {
+                makeErrorToast()
+                swipeRefresh.isRefreshing = false
+                isLoading = false
+            }
+        }
+
     }
 
     override fun onStop() {
@@ -134,6 +146,23 @@ class MainActivity : AppCompatActivity(),
 
     companion object {
         private val TAG = MainActivity::class.java.simpleName
+    }
+
+    fun hasConnection(context: Context): Boolean {
+        val cm =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        var wifiInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
+        if (wifiInfo != null && wifiInfo.isConnected) {
+            return true
+        }
+        wifiInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE)
+        if (wifiInfo != null && wifiInfo.isConnected) {
+            return true
+        }
+        wifiInfo = cm.activeNetworkInfo
+        return if (wifiInfo != null && wifiInfo.isConnected) {
+            true
+        } else false
     }
 
 }
