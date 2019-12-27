@@ -13,6 +13,9 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import butterknife.BindView
 import butterknife.ButterKnife
+import com.bumptech.glide.Priority
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
 import com.gmail.movie_grid.R
 import com.gmail.movie_grid.adapter.ImageGalleryAdapter
 import com.gmail.movie_grid.adapter.PaginationListener
@@ -25,30 +28,36 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
 
-class MainActivity : AppCompatActivity(), View.OnClickListener,
+class MainActivity : AppCompatActivity(),
     SwipeRefreshLayout.OnRefreshListener {
     private val disposable = CompositeDisposable()
-    private lateinit var wordViewModel: FilmsViewModel
+    private lateinit var filmViewModel: FilmsViewModel
     @BindView(R.id.swipeRefresh)
     lateinit var swipeRefresh: SwipeRefreshLayout
+    @BindView(R.id.rv_images)
+    lateinit var recyclerView: RecyclerView
     private var currentPage: Int = PAGE_START
     private var isLastPage = false
     private var totalPage = 0
     private var isLoading = false
     var itemCount = 0
-    lateinit var recyclerView: RecyclerView
     lateinit var adapter: ImageGalleryAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         ButterKnife.bind(this)
-        wordViewModel = ViewModelProvider(this).get(FilmsViewModel::class.java)
-        //wordViewModel = ViewModelProviders.of(this).get(FilmsViewModel::class.java)
-        //swipeRefresh = findViewById(R.id.swipeRefresh)
+        filmViewModel = ViewModelProvider(this).get(FilmsViewModel::class.java)
+
+        filmViewModel.allResponses.observe(this, Observer { response ->
+            response.forEach {
+                adapter.addItems(it.results)
+            }
+        })
         swipeRefresh.setOnRefreshListener(this)
+
         val layoutManager: RecyclerView.LayoutManager = GridLayoutManager(this, 2)
-        recyclerView = findViewById(R.id.rv_images) as RecyclerView
+
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = layoutManager
 
@@ -56,12 +65,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener,
         adapter = ImageGalleryAdapter(this, ArrayList<Result>() as MutableList<Result>)
         recyclerView.adapter = adapter
 
-        wordViewModel.allResponses.observe(this, Observer { words ->
-            Log.d(TAG, words.toString())
-        })
-
         doApiCall()
-
 
         recyclerView.addOnScrollListener(object :
             PaginationListener(layoutManager = layoutManager as LinearLayoutManager) {
@@ -86,7 +90,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener,
                 .subscribeOn(Schedulers.io())
                 .subscribe({ result ->
                     adapter.localResponse = result
-                    wordViewModel.insert(result)
+                    filmViewModel.insert(result)
                     totalPage = result!!.totalPages
 
                     if (currentPage != 1) adapter.removeLoading()
@@ -132,6 +136,4 @@ class MainActivity : AppCompatActivity(), View.OnClickListener,
         private val TAG = MainActivity::class.java.simpleName
     }
 
-    override fun onClick(v: View?) {
-    }
 }

@@ -29,30 +29,16 @@ class ImageGalleryAdapter(
     private var isLoaderVisible = false
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        when (viewType) {
-            VIEW_TYPE_NORMAL -> {
-                val context = parent.context
-                val inflater = LayoutInflater.from(context)
-                val photoView: View = inflater.inflate(R.layout.movie_item, parent, false)
-                return MyViewHolder(photoView)
-            }
-            VIEW_TYPE_LOADING -> {
-                val context = parent.context
-                val inflater = LayoutInflater.from(context)
-                val photoView: View = inflater.inflate(R.layout.movie_item, parent, false)
-                return MyViewHolder(photoView)
-            }
-            else -> {
-                val context = parent.context
-                val inflater = LayoutInflater.from(context)
-                val photoView: View = inflater.inflate(R.layout.movie_item, parent, false)
-                return MyViewHolder(photoView)
-            }
-        }
+
+        val context = parent.context
+        val inflater = LayoutInflater.from(context)
+        val photoView: View = inflater.inflate(R.layout.movie_item, parent, false)
+        return MyViewHolder(photoView)
 
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+
         val spacePhoto = "${NetworkService.POSTER_URL}${mFilms[position]?.posterPath}"
         val imageView = holder.mPhotoImageView
 
@@ -83,9 +69,9 @@ class ImageGalleryAdapter(
         }
     }
 
-    fun addItems(postItems: List<Result?>) {
+    fun addItems(postItems: List<Result>) {
         val oldSize = films.size
-        films.addAll(postItems as Collection<Result>)
+        films.addAll(postItems)
         notifyItemRangeInserted(oldSize, films.size)
     }
 
@@ -118,8 +104,7 @@ class ImageGalleryAdapter(
             if (position != RecyclerView.NO_POSITION) {
                 val spacePhoto: Result = mFilms[position]
                 val intent = Intent(mContext, DentalFilmActivity::class.java)
-                intent.putExtra("Test", spacePhoto.id)
-                intent.putExtra("PAGE", localResponse?.page)
+                intent.putExtra(ID, spacePhoto.id)
                 mContext.startActivity(intent)
             }
         }
@@ -142,5 +127,9 @@ class ImageGalleryAdapter(
 
     init {
         mFilms = films
+    }
+
+    companion object {
+        const val ID = "ID"
     }
 }

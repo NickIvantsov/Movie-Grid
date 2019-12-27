@@ -19,11 +19,12 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.RequestOptions.bitmapTransform
+import com.bumptech.glide.request.target.Target
 import com.gmail.movie_grid.R
+import com.gmail.movie_grid.adapter.ImageGalleryAdapter.Companion.ID
 import com.gmail.movie_grid.data.viewModel.FilmsViewModel
 import com.gmail.movie_grid.model.Result
 import com.gmail.movie_grid.net.NetworkService
-import com.gmail.movie_grid.util.FilmFilter
 import jp.wasabeef.glide.transformations.BlurTransformation
 
 class DentalFilmActivity : AppCompatActivity() {
@@ -54,10 +55,7 @@ class DentalFilmActivity : AppCompatActivity() {
 
         val intent = intent
 
-        val id = intent.getIntExtra("Test", 0)
-        val page = intent.getIntExtra("PAGE", 0)
-
-        Log.d(TAG, "###### id = $id ######")
+        val id = intent.getIntExtra(ID, 0)
 
         overview.movementMethod = ScrollingMovementMethod()
 
@@ -67,13 +65,11 @@ class DentalFilmActivity : AppCompatActivity() {
         filmViewModel = ViewModelProvider(this).get(FilmsViewModel::class.java)
 
         filmViewModel.allResponses.observe(this, Observer { response ->
-            var i = 0
+
             response.forEach {
-                Log.d(TAG, it.toString())
-                System.out.println(" MY COUNT $i ")/*|||DentalFilmActivity:result  = $it ||| results =  ${it.results}|||*/
-                i++
-                val results: List<Result> = FilmFilter(id).filter(it.results)
-                Log.d(TAG, "||||| RESULT LIST = $results |||||||")
+
+                val results: List<Result> = it.results.filter { n -> id == n?.id }
+
                 when {
                     results.isNotEmpty() -> {
                         val result: Result = results[0]
@@ -104,68 +100,79 @@ class DentalFilmActivity : AppCompatActivity() {
                             .dontAnimate()
                             .dontTransform()
 
-                        Glide.with(this)
-                            .load(bgPath)
-                            .placeholder(R.drawable.ic_launcher_background)
-                            .apply(options)
-                            .apply(bitmapTransform(BlurTransformation(25, 3)))
-                            .listener(object : RequestListener<Drawable> {
-                                override fun onLoadFailed(
-                                    e: GlideException?,
-                                    model: Any?,
-                                    target: com.bumptech.glide.request.target.Target<Drawable>?,
-                                    isFirstResource: Boolean
-                                ): Boolean {
-                                    Log.e(TAG, "Error bgPath loading image", e)
-                                    return false // important to return false so the error placeholder can be placed
-                                }
+                        displayBg(bgPath, options)
 
-                                override fun onResourceReady(
-                                    resource: Drawable?,
-                                    model: Any?,
-                                    target: com.bumptech.glide.request.target.Target<Drawable>?,
-                                    dataSource: DataSource?,
-                                    isFirstResource: Boolean
-                                ): Boolean {
-                                    return false
-                                }
-
-
-                            })
-                            .into(imageView)
-
-                        Glide.with(this)
-                            .load(posterPath)
-                            .placeholder(R.drawable.ic_launcher_background)
-                            .apply(options)
-                            .listener(object : RequestListener<Drawable> {
-                                override fun onLoadFailed(
-                                    e: GlideException?,
-                                    model: Any?,
-                                    target: com.bumptech.glide.request.target.Target<Drawable>?,
-                                    isFirstResource: Boolean
-                                ): Boolean {
-                                    Log.e(TAG, "Error bgPath loading image", e)
-                                    return false // important to return false so the error placeholder can be placed
-                                }
-
-                                override fun onResourceReady(
-                                    resource: Drawable?,
-                                    model: Any?,
-                                    target: com.bumptech.glide.request.target.Target<Drawable>?,
-                                    dataSource: DataSource?,
-                                    isFirstResource: Boolean
-                                ): Boolean {
-                                    return false
-                                }
-
-                            })
-                            .into(this.posterPath)
+                        displayPoster(posterPath, options)
                     }
                 }
             }
 
         })
+    }
+
+    private fun displayBg(bgPath: String, options: RequestOptions) {
+        Glide.with(this)
+            .load(bgPath)
+            .placeholder(R.drawable.ic_launcher_background)
+            .apply(options)
+            .apply(bitmapTransform(BlurTransformation(25, 3)))
+            .listener(object : RequestListener<Drawable> {
+                override fun onLoadFailed(
+                    e: GlideException?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    Log.e(TAG, "Error bgPath loading image", e)
+                    return false // important to return false so the error placeholder can be placed
+                }
+
+                override fun onResourceReady(
+                    resource: Drawable?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    dataSource: DataSource?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    return false
+                }
+
+
+            })
+            .into(imageView)
+    }
+
+    private fun displayPoster(
+        posterPath: String,
+        options: RequestOptions
+    ) {
+        Glide.with(this)
+            .load(posterPath)
+            .placeholder(R.drawable.ic_launcher_background)
+            .apply(options)
+            .listener(object : RequestListener<Drawable> {
+                override fun onLoadFailed(
+                    e: GlideException?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    Log.e(TAG, "Error bgPath loading image", e)
+                    return false // important to return false so the error placeholder can be placed
+                }
+
+                override fun onResourceReady(
+                    resource: Drawable?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    dataSource: DataSource?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    return false
+                }
+
+            })
+            .into(this.posterPath)
     }
 
     companion object {
