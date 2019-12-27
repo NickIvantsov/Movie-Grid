@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -13,11 +13,6 @@
         <item name="cardElevation">2dp</item>
         <item name="cardBackgroundColor">@color/indigo</item>
     </style>
-    <!--
-        <item name="contentPaddingBottom">24dp</item>
-        <item name="contentPaddingTop">24dp</item>
-        <item name="contentPaddingLeft">16dp</item>
-        <item name="contentPaddingRight">16dp</item>-->
 
     <color name="indigo">#F7F7F7</color>
     <color name="indigo2">#2196F3</color>
