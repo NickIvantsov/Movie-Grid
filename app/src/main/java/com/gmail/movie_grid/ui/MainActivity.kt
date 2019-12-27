@@ -42,21 +42,32 @@ class MainActivity : AppCompatActivity(),
     private var isLoading = false
     var itemCount = 0
     lateinit var adapter: ImageGalleryAdapter
+    private var isFirstStart = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         ButterKnife.bind(this)
+
         filmViewModel = ViewModelProvider(this).get(FilmsViewModel::class.java)
 
         filmViewModel.allResponses.observe(this, Observer { response ->
-            response.forEach {
-                adapter.addItems(it.results)
+            when (isFirstStart) {
+                true -> {
+                    response.forEach {
+                        adapter.addItems(it.results)
+                    }
+                    isFirstStart = false
+                }
             }
+
         })
+
         swipeRefresh.setOnRefreshListener(this)
 
         layoutManager = GridLayoutManager(this, 2)
+
+        setOnScrollListener(layoutManager)
 
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = layoutManager
@@ -132,19 +143,6 @@ class MainActivity : AppCompatActivity(),
         disposable.clear()
     }
 
-    override fun onResume() {
-        super.onResume()
-        when (getScreenOrientation()) {
-            PORTRAIT_ORIENTATION -> {
-                layoutManager = GridLayoutManager(this, 2)
-                setOnScrollListener(layoutManager)
-            }
-            LANDSCAPE_ORIENTATION -> {
-                layoutManager = GridLayoutManager(this, 4)
-                setOnScrollListener(layoutManager)
-            }
-        }
-    }
 
     private fun setOnScrollListener(layoutManager: RecyclerView.LayoutManager) {
         recyclerView.layoutManager = layoutManager
@@ -167,6 +165,30 @@ class MainActivity : AppCompatActivity(),
         private const val PORTRAIT_ORIENTATION = 1
         private const val LANDSCAPE_ORIENTATION = 2
         private const val UNKNOWN = -1
+        private const val CURRENT_PAGE = "CURRENT_PAGE"
+        private const val IS_LAST_PAGE = "IS_LAST_PAGE"
+        private const val TOTAL_PAGE = "TOTAL_PAGE"
+        private const val IS_LOADING = "IS_LOADING"
+        private const val ITEM_COUNT = "ITEM_COUNT"
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+
+        when (getScreenOrientation()) {
+            PORTRAIT_ORIENTATION -> {
+                layoutManager = GridLayoutManager(this, 2)
+                setOnScrollListener(layoutManager)
+            }
+            LANDSCAPE_ORIENTATION -> {
+                layoutManager = GridLayoutManager(this, 4)
+                setOnScrollListener(layoutManager)
+            }
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
     }
 
     fun hasConnection(context: Context): Boolean {
