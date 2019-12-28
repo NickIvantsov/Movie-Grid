@@ -88,3 +88,11 @@ V
 &app/src/main/res/layout/movie_item.xml,a\1\a1ceff8a3b67a540e62ce938c3549c4a5d93ae83
 `
 0app/src/main/res/xml/network_security_config.xml,9\d\9d239a9c6e0f3ce6bc750ee58e30863a8efd3403
+|
+Lapp/src/main/java/com/gmail/movie_grid/data/viewModel/SavedStateViewModel.kt,8\9\89bfb887bf2daf6bfd50dc94514e7e4d344ab009
+e
+5app/src/main/res/layout-land/activity_dental_film.xml,9\8\98a53f3e814f846978a97a05c4add910dcf7878f
+[
++app/src/main/res/layout-land/movie_item.xml,2\b\2b78cf0507e35cc9111fdae88facddfa0f953055
+o
+?app/src/main/java/com/gmail/movie_grid/util/MyAppGlideModule.kt,2\2\22fc585bae30b5ff42ffcaf8660916807858390a
