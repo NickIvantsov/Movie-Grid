@@ -1,5 +1,6 @@
 package com.gmail.movie_grid.ui
 
+import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
@@ -98,7 +99,7 @@ class DentalFilmActivity : AppCompatActivity() {
                             .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .priority(Priority.HIGH)
                             .dontAnimate()
-                            .error(R.drawable.ic_error_outline_black_24dp)
+                            //.error(R.drawable.ic_error_outline_black_24dp)
                             .dontTransform()
 
                         displayBg(bgPath, options)
@@ -125,6 +126,7 @@ class DentalFilmActivity : AppCompatActivity() {
                     isFirstResource: Boolean
                 ): Boolean {
                     Log.e(TAG, "Error bgPath loading image", e)
+                    imageView.setBackgroundColor(Color.BLACK)
                     return false // important to return false so the error placeholder can be placed
                 }
 
@@ -139,16 +141,16 @@ class DentalFilmActivity : AppCompatActivity() {
                 }
 
 
-            })
+            }).override(500, 500)
             .into(imageView)
     }
 
     private fun displayPoster(
-        posterPath: String,
+        posterPathStr: String,
         options: RequestOptions
     ) {
         Glide.with(this)
-            .load(posterPath)
+            .load(posterPathStr)
             .placeholder(R.drawable.ic_launcher_background)
             .apply(options)
             .listener(object : RequestListener<Drawable> {
@@ -159,6 +161,7 @@ class DentalFilmActivity : AppCompatActivity() {
                     isFirstResource: Boolean
                 ): Boolean {
                     Log.e(TAG, "Error bgPath loading image", e)
+                    posterPath.setBackgroundColor(Color.DKGRAY)
                     return false // important to return false so the error placeholder can be placed
                 }
 

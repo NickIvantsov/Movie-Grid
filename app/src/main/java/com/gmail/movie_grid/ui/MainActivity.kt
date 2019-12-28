@@ -31,13 +31,15 @@ import io.reactivex.schedulers.Schedulers
 
 class MainActivity : AppCompatActivity(),
     SwipeRefreshLayout.OnRefreshListener {
-    private val disposable = CompositeDisposable()
-    private lateinit var filmViewModel: FilmsViewModel
-    private lateinit var layoutManager: RecyclerView.LayoutManager
+
     @BindView(R.id.swipeRefresh)
     lateinit var swipeRefresh: SwipeRefreshLayout
     @BindView(R.id.rv_images)
     lateinit var recyclerView: RecyclerView
+
+    private val disposable = CompositeDisposable()
+    private lateinit var filmViewModel: FilmsViewModel
+    private lateinit var layoutManager: RecyclerView.LayoutManager
     private var currentPage: Int = PAGE_START
     private var isLastPage = false
     private var totalPage = 0
@@ -151,7 +153,6 @@ class MainActivity : AppCompatActivity(),
 
     override fun onPause() {
         super.onPause()
-        listState = recyclerView.layoutManager?.onSaveInstanceState()
         savedStateViewModel.saveListState(listState)
         savedStateViewModel.saveFilms(adapter.films)
     }

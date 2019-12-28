@@ -2,6 +2,8 @@ package com.gmail.movie_grid.adapter
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.Drawable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,8 +12,12 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
+import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.Target
 import com.gmail.movie_grid.R
 import com.gmail.movie_grid.model.Response
 import com.gmail.movie_grid.model.Result
@@ -37,7 +43,7 @@ class ImageGalleryAdapter(
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
 
-        val spacePhoto = "${NetworkService.POSTER_URL}${mFilms[position].posterPath}"
+        val spacePhoto = "${NetworkService.POSTER_URL}${mFilms[position]?.posterPath ?: ""}"
         val imageView = holder.mPhotoImageView
 
         println(spacePhoto)
@@ -49,11 +55,40 @@ class ImageGalleryAdapter(
             .error(R.drawable.ic_error_outline_black_24dp)
             .dontTransform()
 
-        Glide.with(mContext)
-            .load(spacePhoto)
-            .placeholder(R.drawable.ic_launcher_background)
-            .apply(options)
-            .into(imageView)
+        if (spacePhoto != NetworkService.POSTER_URL) {
+            Glide.with(mContext)
+                .load(spacePhoto)
+                .placeholder(R.drawable.ic_launcher_background)
+                .apply(options)
+                .listener(object : RequestListener<Drawable> {
+                    override fun onLoadFailed(
+                        e: GlideException?,
+                        model: Any?,
+                        target: Target<Drawable>?,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        Log.e(TAG, "Error bgPath loading image", e)
+                        return false // important to return false so the error placeholder can be placed
+                    }
+
+                    override fun onResourceReady(
+                        resource: Drawable?,
+                        model: Any?,
+                        target: Target<Drawable>?,
+                        dataSource: DataSource?,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        return false
+                    }
+
+
+                })
+                .into(imageView)
+        }else{
+
+            Log.e(TAG,"DELETE FAIL EL spacePhoto =  $spacePhoto mFilms = ${mFilms[position]}")
+        }
+
     }
 
     override fun getItemCount(): Int {
@@ -132,5 +167,6 @@ class ImageGalleryAdapter(
         const val ID = "ID"
         const val VIEW_TYPE_LOADING = 0
         const val VIEW_TYPE_NORMAL = 1
+        const val TAG = "ImageGalleryAdapter"
     }
 }

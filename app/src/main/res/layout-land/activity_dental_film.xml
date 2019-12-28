@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:backgroundTint="@android:color/black"
     tools:context=".ui.DentalFilmActivity">
 
     <ScrollView
@@ -93,6 +94,7 @@
                     android:id="@+id/poster_path"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:background="@android:color/darker_gray"
                     android:scaleType="centerCrop"
                     card_view:layout_constraintStart_toStartOf="parent"
                     card_view:layout_constraintTop_toBottomOf="@+id/name_film"
