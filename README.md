@@ -1,3 +1,12 @@
+Приложение для получения списка новинок в индустрии фильмов.
+Используемые технологии:
+* -Retrofit
+* -RxJava
+* -Kotlin
+* -Glide
+* -Room
+* -LiveData
+
 # Movie-Grid
 ![film land-space](https://trello-attachments.s3.amazonaws.com/5bd3783d5230373466f7f163/5e6deea03036a08fd0cea566/14c0d2227d3edbe591aacf18ba1bf237/image.png)
 
